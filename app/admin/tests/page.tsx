@@ -2,51 +2,31 @@
 
 import Link from "next/link";
 import { GraduationCap, FileText, Plus, Search, Filter, MoreVertical, Users, Clock } from "lucide-react";
+import { useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
 
 export default function TestsManagementPage() {
-  // Sample test data
-  const tests = [
-    {
-      id: 1,
-      title: "Business Communication - Intermediate",
-      level: "intermediate",
-      questionCount: 15,
-      completions: 47,
-      avgScore: 82,
-      createdAt: "2 days ago",
-      status: "active",
-    },
-    {
-      id: 2,
-      title: "Grammar Fundamentals - Beginner",
-      level: "beginner",
-      questionCount: 20,
-      completions: 134,
-      avgScore: 76,
-      createdAt: "1 week ago",
-      status: "active",
-    },
-    {
-      id: 3,
-      title: "Cambridge First Certificate Prep",
-      level: "cambridge",
-      questionCount: 30,
-      completions: 28,
-      avgScore: 68,
-      createdAt: "2 weeks ago",
-      status: "active",
-    },
-    {
-      id: 4,
-      title: "Advanced Business Vocabulary",
-      level: "advanced",
-      questionCount: 25,
-      completions: 15,
-      avgScore: 85,
-      createdAt: "3 weeks ago",
-      status: "draft",
-    },
-  ];
+  // Fetch real test data from Convex
+  const tests = useQuery(api.tests.getAllTests) || [];
+
+  // Calculate stats
+  const activeTests = tests.filter(t => t.isActive);
+  const totalCompletions = tests.reduce((sum, t) => sum + (t.completions || 0), 0);
+  const avgScore = tests.length > 0
+    ? Math.round(tests.reduce((sum, t) => sum + (t.averageScore || 0), 0) / tests.length)
+    : 0;
+
+  const formatDate = (timestamp: number) => {
+    const date = new Date(timestamp);
+    const now = new Date();
+    const diffInDays = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
+
+    if (diffInDays === 0) return "Today";
+    if (diffInDays === 1) return "Yesterday";
+    if (diffInDays < 7) return `${diffInDays} days ago`;
+    if (diffInDays < 30) return `${Math.floor(diffInDays / 7)} weeks ago`;
+    return `${Math.floor(diffInDays / 30)} months ago`;
+  };
 
   return (
     <div className="min-h-screen bg-neutral-light">
@@ -100,7 +80,7 @@ export default function TestsManagementPage() {
               <FileText className="w-8 h-8 text-primary-blue" />
               <span className="badge badge-blue">Active</span>
             </div>
-            <p className="text-3xl font-bold mb-1">{tests.filter(t => t.status === 'active').length}</p>
+            <p className="text-3xl font-bold mb-1">{activeTests.length}</p>
             <p className="text-neutral-dark text-sm">Active Tests</p>
           </div>
 
@@ -109,7 +89,7 @@ export default function TestsManagementPage() {
               <Users className="w-8 h-8 text-primary-purple" />
               <span className="badge badge-purple">Total</span>
             </div>
-            <p className="text-3xl font-bold mb-1">{tests.reduce((sum, t) => sum + t.completions, 0)}</p>
+            <p className="text-3xl font-bold mb-1">{totalCompletions}</p>
             <p className="text-neutral-dark text-sm">Completions</p>
           </div>
 
@@ -118,19 +98,17 @@ export default function TestsManagementPage() {
               <FileText className="w-8 h-8 text-primary-pink" />
               <span className="badge badge-pink">Avg</span>
             </div>
-            <p className="text-3xl font-bold mb-1">
-              {Math.round(tests.reduce((sum, t) => sum + t.avgScore, 0) / tests.length)}%
-            </p>
+            <p className="text-3xl font-bold mb-1">{avgScore || 0}%</p>
             <p className="text-neutral-dark text-sm">Average Score</p>
           </div>
 
           <div className="card p-6">
             <div className="flex items-center justify-between mb-4">
               <Clock className="w-8 h-8 text-primary-blue" />
-              <span className="badge badge-blue">Recent</span>
+              <span className="badge badge-blue">Total</span>
             </div>
-            <p className="text-3xl font-bold mb-1">2</p>
-            <p className="text-neutral-dark text-sm">Created This Week</p>
+            <p className="text-3xl font-bold mb-1">{tests.length}</p>
+            <p className="text-neutral-dark text-sm">All Tests</p>
           </div>
         </div>
 
@@ -157,7 +135,7 @@ export default function TestsManagementPage() {
           <div className="divide-y divide-neutral-dark/10">
             {tests.map((test) => (
               <div
-                key={test.id}
+                key={test._id}
                 className="p-6 hover:bg-neutral-light transition-colors"
               >
                 <div className="flex items-start justify-between">
@@ -165,40 +143,40 @@ export default function TestsManagementPage() {
                     <div className="flex items-center gap-3 mb-2">
                       <h3 className="text-xl font-semibold">{test.title}</h3>
                       <span className={`badge ${
-                        test.status === 'active' ? 'badge-blue' : 'badge-pink'
+                        test.isActive ? 'badge-blue' : 'badge-pink'
                       }`}>
-                        {test.status}
+                        {test.isActive ? 'active' : 'inactive'}
                       </span>
                       <span className="badge badge-purple">
-                        {test.level}
+                        {test.level || 'intermediate'}
                       </span>
                     </div>
 
                     <div className="flex items-center gap-6 text-sm text-neutral-dark mb-3">
-                      <span>{test.questionCount} questions</span>
+                      <span>{test.questionCount || 0} questions</span>
                       <span>•</span>
-                      <span>{test.completions} completions</span>
+                      <span>{test.completions || 0} completions</span>
                       <span>•</span>
-                      <span>Avg: {test.avgScore}%</span>
+                      <span>Avg: {test.averageScore || 0}%</span>
                       <span>•</span>
-                      <span>Created {test.createdAt}</span>
+                      <span>Created {formatDate(test.createdAt)}</span>
                     </div>
 
                     <div className="flex gap-3">
                       <Link
-                        href={`/admin/tests/${test.id}`}
+                        href={`/admin/tests/${test._id}`}
                         className="text-sm text-primary-blue hover:text-primary-purple transition-colors font-medium"
                       >
                         View Details
                       </Link>
                       <Link
-                        href={`/admin/tests/${test.id}/edit`}
+                        href={`/admin/tests/${test._id}/edit`}
                         className="text-sm text-primary-purple hover:text-primary-blue transition-colors font-medium"
                       >
                         Edit
                       </Link>
                       <Link
-                        href={`/admin/tests/${test.id}/results`}
+                        href={`/admin/tests/${test._id}/results`}
                         className="text-sm text-primary-pink hover:text-primary-purple transition-colors font-medium"
                       >
                         View Results

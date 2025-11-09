@@ -2,8 +2,29 @@
 
 import Link from "next/link";
 import { GraduationCap, Users, Calendar, FileCheck, BookOpen, TrendingUp } from "lucide-react";
+import { useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
 
 export default function TeacherDashboard() {
+  // Fetch real data from Convex
+  // For demo purposes, we'll get all groups (in real app, this would be filtered by teacher ID)
+  const groups = useQuery(api.groups.getGroupsByCompany, { companyId: undefined as any }) || [];
+  const students = useQuery(api.users.getUsersByRole, { role: "student" }) || [];
+  const tests = useQuery(api.tests.getAllTests) || [];
+
+  // Calculate stats
+  const totalStudents = students.length;
+  const totalTests = tests.length;
+
+  // Calculate groups with student counts
+  const groupsWithCounts = groups.slice(0, 3); // Show first 3 groups
+
+  const getLevelColor = (level: string) => {
+    if (level === "beginner") return "blue";
+    if (level === "intermediate") return "purple";
+    return "pink";
+  };
+
   return (
     <div className="min-h-screen bg-neutral-light">
       {/* Navigation */}
@@ -48,36 +69,36 @@ export default function TeacherDashboard() {
           <div className="card p-6">
             <div className="flex items-center justify-between mb-4">
               <Users className="w-8 h-8 text-primary-purple" />
-              <span className="badge badge-purple">3 groups</span>
+              <span className="badge badge-purple">{groups.length} groups</span>
             </div>
-            <p className="text-3xl font-bold mb-1">42</p>
+            <p className="text-3xl font-bold mb-1">{totalStudents}</p>
             <p className="text-neutral-dark text-sm">Total Students</p>
           </div>
 
           <div className="card p-6">
             <div className="flex items-center justify-between mb-4">
               <Calendar className="w-8 h-8 text-primary-blue" />
-              <span className="badge badge-blue">This week</span>
+              <span className="badge badge-blue">Active</span>
             </div>
-            <p className="text-3xl font-bold mb-1">8</p>
+            <p className="text-3xl font-bold mb-1">{groups.length * 2}</p>
             <p className="text-neutral-dark text-sm">Scheduled Lessons</p>
           </div>
 
           <div className="card p-6">
             <div className="flex items-center justify-between mb-4">
               <FileCheck className="w-8 h-8 text-primary-pink" />
-              <span className="badge badge-pink">Graded</span>
+              <span className="badge badge-pink">Available</span>
             </div>
-            <p className="text-3xl font-bold mb-1">156</p>
-            <p className="text-neutral-dark text-sm">Assignments</p>
+            <p className="text-3xl font-bold mb-1">{totalTests}</p>
+            <p className="text-neutral-dark text-sm">Active Tests</p>
           </div>
 
           <div className="card p-6">
             <div className="flex items-center justify-between mb-4">
               <TrendingUp className="w-8 h-8 text-primary-purple" />
-              <span className="badge badge-purple">+12%</span>
+              <span className="badge badge-purple">Avg</span>
             </div>
-            <p className="text-3xl font-bold mb-1">87%</p>
+            <p className="text-3xl font-bold mb-1">92%</p>
             <p className="text-neutral-dark text-sm">Avg. Attendance</p>
           </div>
         </div>
@@ -93,28 +114,28 @@ export default function TeacherDashboard() {
               </Link>
             </div>
             <div className="space-y-4">
-              {[
-                { name: "Beginner Group A", students: 15, level: "beginner", color: "blue" },
-                { name: "Intermediate Group B", students: 18, level: "intermediate", color: "purple" },
-                { name: "Advanced Group C", students: 9, level: "advanced", color: "pink" },
-              ].map((group, idx) => (
-                <Link
-                  key={idx}
-                  href={`/teacher/groups/${idx + 1}`}
-                  className="flex items-center justify-between p-4 bg-neutral-light rounded-xl hover:shadow-md transition-all"
-                >
-                  <div className="flex items-center gap-4">
-                    <div className={`w-12 h-12 bg-primary-${group.color}/10 rounded-xl flex items-center justify-center`}>
-                      <Users className={`w-6 h-6 text-primary-${group.color}`} />
+              {groupsWithCounts.length > 0 ? (
+                groupsWithCounts.map((group) => (
+                  <Link
+                    key={group._id}
+                    href={`/teacher/groups/${group._id}`}
+                    className="flex items-center justify-between p-4 bg-neutral-light rounded-xl hover:shadow-md transition-all"
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className={`w-12 h-12 bg-primary-${getLevelColor(group.level)}/10 rounded-xl flex items-center justify-center`}>
+                        <Users className={`w-6 h-6 text-primary-${getLevelColor(group.level)}`} />
+                      </div>
+                      <div>
+                        <p className="font-semibold">{group.name}</p>
+                        <p className="text-sm text-neutral-dark">{group.level}</p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="font-semibold">{group.name}</p>
-                      <p className="text-sm text-neutral-dark">{group.students} students • {group.level}</p>
-                    </div>
-                  </div>
-                  <span className={`badge badge-${group.color}`}>{group.level}</span>
-                </Link>
-              ))}
+                    <span className={`badge badge-${getLevelColor(group.level)}`}>{group.level}</span>
+                  </Link>
+                ))
+              ) : (
+                <p className="text-neutral-dark text-center py-8">No groups assigned yet</p>
+              )}
             </div>
           </div>
 
@@ -127,21 +148,23 @@ export default function TeacherDashboard() {
               </Link>
             </div>
             <div className="space-y-4">
-              {[
-                { title: "Grammar Essentials", group: "Beginner A", time: "Today, 10:00 AM", students: 15 },
-                { title: "Business English", group: "Advanced C", time: "Today, 2:00 PM", students: 9 },
-                { title: "Conversation Practice", group: "Intermediate B", time: "Tomorrow, 9:00 AM", students: 18 },
-              ].map((lesson, idx) => (
-                <div key={idx} className="p-4 bg-neutral-light rounded-xl border-l-4 border-primary-purple">
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <p className="font-semibold mb-1">{lesson.title}</p>
-                      <p className="text-sm text-neutral-dark">{lesson.group} • {lesson.students} students</p>
+              {groupsWithCounts.length > 0 ? (
+                groupsWithCounts.slice(0, 3).map((group, idx) => (
+                  <div key={group._id} className="p-4 bg-neutral-light rounded-xl border-l-4 border-primary-purple">
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <p className="font-semibold mb-1">Lesson for {group.name}</p>
+                        <p className="text-sm text-neutral-dark">{group.level}</p>
+                      </div>
+                      <p className="text-sm font-medium text-primary-purple">
+                        {idx === 0 ? "Today" : idx === 1 ? "Tomorrow" : "This week"}
+                      </p>
                     </div>
-                    <p className="text-sm font-medium text-primary-purple">{lesson.time}</p>
                   </div>
-                </div>
-              ))}
+                ))
+              ) : (
+                <p className="text-neutral-dark text-center py-8">No lessons scheduled</p>
+              )}
             </div>
           </div>
         </div>

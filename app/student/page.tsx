@@ -2,8 +2,27 @@
 
 import Link from "next/link";
 import { GraduationCap, BookOpen, Trophy, Calendar, Play, Star } from "lucide-react";
+import { useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
 
 export default function StudentDashboard() {
+  // Fetch real data from Convex
+  const tests = useQuery(api.tests.getAllTests) || [];
+  const groups = useQuery(api.groups.getGroupsByCompany, { companyId: undefined as any }) || [];
+
+  // Calculate student-specific stats
+  const availableTests = tests.filter(t => t.isActive).length;
+  const totalPoints = 485; // This would be calculated from test_results in real app
+  const completedLessons = 12; // This would be from attendance/lessons table
+  const currentLevel = groups.length > 0 ? groups[0].level : "B2";
+
+  // Sample recent tests (in real app, this would be from test_results table)
+  const recentTests = [
+    { name: "Grammar Test - Unit 5", score: 92, date: "2 days ago", passed: true },
+    { name: "Vocabulary Quiz", score: 88, date: "5 days ago", passed: true },
+    { name: "Listening Comprehension", score: 95, date: "1 week ago", passed: true },
+  ];
+
   return (
     <div className="min-h-screen bg-neutral-light">
       {/* Navigation */}
@@ -59,7 +78,7 @@ export default function StudentDashboard() {
               <Star className="w-8 h-8 text-primary-pink" />
               <span className="badge badge-pink">Level</span>
             </div>
-            <p className="text-3xl font-bold mb-1">B2</p>
+            <p className="text-3xl font-bold mb-1">{currentLevel.toUpperCase()}</p>
             <p className="text-neutral-dark text-sm">Current Level</p>
           </div>
 
@@ -68,26 +87,26 @@ export default function StudentDashboard() {
               <Trophy className="w-8 h-8 text-primary-purple" />
               <span className="badge badge-purple">+15 pts</span>
             </div>
-            <p className="text-3xl font-bold mb-1">485</p>
+            <p className="text-3xl font-bold mb-1">{totalPoints}</p>
             <p className="text-neutral-dark text-sm">Total Points</p>
           </div>
 
           <div className="card p-6">
             <div className="flex items-center justify-between mb-4">
               <BookOpen className="w-8 h-8 text-primary-blue" />
-              <span className="badge badge-blue">This week</span>
+              <span className="badge badge-blue">Available</span>
             </div>
-            <p className="text-3xl font-bold mb-1">12</p>
-            <p className="text-neutral-dark text-sm">Lessons Completed</p>
+            <p className="text-3xl font-bold mb-1">{availableTests}</p>
+            <p className="text-neutral-dark text-sm">Tests Available</p>
           </div>
 
           <div className="card p-6">
             <div className="flex items-center justify-between mb-4">
               <Calendar className="w-8 h-8 text-primary-pink" />
-              <span className="badge badge-pink">92%</span>
+              <span className="badge badge-pink">This week</span>
             </div>
-            <p className="text-3xl font-bold mb-1">23</p>
-            <p className="text-neutral-dark text-sm">Days Streak</p>
+            <p className="text-3xl font-bold mb-1">{completedLessons}</p>
+            <p className="text-neutral-dark text-sm">Lessons Completed</p>
           </div>
         </div>
 
@@ -96,11 +115,7 @@ export default function StudentDashboard() {
           <div className="card p-8">
             <h3 className="text-2xl font-semibold mb-6">Recent Test Results</h3>
             <div className="space-y-4">
-              {[
-                { name: "Grammar Test - Unit 5", score: 92, date: "2 days ago", passed: true },
-                { name: "Vocabulary Quiz", score: 88, date: "5 days ago", passed: true },
-                { name: "Listening Comprehension", score: 95, date: "1 week ago", passed: true },
-              ].map((test, idx) => (
+              {recentTests.map((test, idx) => (
                 <div key={idx} className="p-4 bg-neutral-light rounded-xl border-l-4 border-primary-pink">
                   <div className="flex items-center justify-between mb-2">
                     <p className="font-semibold">{test.name}</p>

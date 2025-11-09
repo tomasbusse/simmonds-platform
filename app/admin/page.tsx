@@ -2,8 +2,25 @@
 
 import Link from "next/link";
 import { GraduationCap, Building2, Users, FileText, BarChart3, Settings } from "lucide-react";
+import { useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
 
 export default function AdminDashboard() {
+  // Fetch real data from Convex
+  const companies = useQuery(api.companies.getAllCompanies) || [];
+  const users = useQuery(api.users.getUsersByRole, { role: "student" }) || [];
+  const teachers = useQuery(api.users.getUsersByRole, { role: "teacher" }) || [];
+  const tests = useQuery(api.tests.getAllTests) || [];
+
+  // Calculate stats
+  const totalUsers = users.length + teachers.length;
+  const activeTests = tests.filter(t => t.isActive).length;
+
+  // Calculate total completions from all test results
+  const totalCompletions = tests.reduce((sum, test) => {
+    return sum + (test.completions || 0);
+  }, 0);
+
   return (
     <div className="min-h-screen bg-neutral-light">
       {/* Navigation */}
@@ -50,16 +67,16 @@ export default function AdminDashboard() {
               <Building2 className="w-8 h-8 text-primary-blue" />
               <span className="badge badge-blue">Active</span>
             </div>
-            <p className="text-3xl font-bold mb-1">12</p>
+            <p className="text-3xl font-bold mb-1">{companies.length}</p>
             <p className="text-neutral-dark text-sm">Companies</p>
           </div>
 
           <div className="card p-6">
             <div className="flex items-center justify-between mb-4">
               <Users className="w-8 h-8 text-primary-purple" />
-              <span className="badge badge-purple">+8 today</span>
+              <span className="badge badge-purple">Live</span>
             </div>
-            <p className="text-3xl font-bold mb-1">847</p>
+            <p className="text-3xl font-bold mb-1">{totalUsers}</p>
             <p className="text-neutral-dark text-sm">Total Users</p>
           </div>
 
@@ -68,16 +85,16 @@ export default function AdminDashboard() {
               <FileText className="w-8 h-8 text-primary-pink" />
               <span className="badge badge-pink">Live</span>
             </div>
-            <p className="text-3xl font-bold mb-1">24</p>
+            <p className="text-3xl font-bold mb-1">{activeTests}</p>
             <p className="text-neutral-dark text-sm">Active Tests</p>
           </div>
 
           <div className="card p-6">
             <div className="flex items-center justify-between mb-4">
               <BarChart3 className="w-8 h-8 text-primary-blue" />
-              <span className="badge badge-blue">92%</span>
+              <span className="badge badge-blue">Total</span>
             </div>
-            <p className="text-3xl font-bold mb-1">3,291</p>
+            <p className="text-3xl font-bold mb-1">{totalCompletions}</p>
             <p className="text-neutral-dark text-sm">Completions</p>
           </div>
         </div>
