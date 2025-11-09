@@ -2,26 +2,131 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Simmonds Platform Brand Colors */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Primary Brand Colors */
+  --primary-blue: #35627A;     /* Deep blue for headers, navigation */
+  --primary-purple: #A6A9D0;   /* Purple for accents, buttons */
+  --primary-pink: #E5AEA9;     /* Pink for highlights, success states */
+
+  /* Neutral Colors */
+  --neutral-light: #F5F5F5;    /* Light gray for backgrounds */
+  --neutral-dark: #8E9A98;     /* Dark gray for text, borders */
+
+  /* Semantic Colors */
+  --background: #FFFFFF;
+  --foreground: #2C3E50;
+  --success: #E5AEA9;
+  --warning: #F39C12;
+  --error: #E74C3C;
+  --info: #A6A9D0;
+
+  /* Spacing & Typography */
+  --radius: 12px;
+  --shadow-sm: 0 1px 3px rgba(53, 98, 122, 0.05);
+  --shadow-md: 0 4px 12px rgba(53, 98, 122, 0.08);
+  --shadow-lg: 0 10px 30px rgba(53, 98, 122, 0.12);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  * {
+    @apply border-neutral-dark/10;
+  }
+
+  body {
+    @apply bg-neutral-light text-foreground;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold text-primary-blue;
+    letter-spacing: -0.02em;
+  }
+
+  h1 {
+    @apply text-4xl md:text-5xl;
+  }
+
+  h2 {
+    @apply text-3xl md:text-4xl;
+  }
+
+  h3 {
+    @apply text-2xl md:text-3xl;
   }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  /* Button Variants */
+  .btn {
+    @apply px-6 py-3 rounded-xl font-medium transition-all duration-200 shadow-sm;
+    @apply hover:shadow-md active:scale-[0.98];
+  }
+
+  .btn-primary {
+    @apply bg-primary-purple text-white;
+    @apply hover:bg-primary-purple/90;
+  }
+
+  .btn-secondary {
+    @apply bg-white text-primary-blue border border-primary-blue/20;
+    @apply hover:bg-primary-blue/5;
+  }
+
+  .btn-success {
+    @apply bg-primary-pink text-white;
+    @apply hover:bg-primary-pink/90;
+  }
+
+  /* Card Styles */
+  .card {
+    @apply bg-white rounded-2xl shadow-md border border-neutral-dark/5;
+    @apply hover:shadow-lg transition-all duration-300;
+  }
+
+  /* Input Styles */
+  .input {
+    @apply w-full px-4 py-3 rounded-xl border border-neutral-dark/20;
+    @apply bg-white text-foreground placeholder:text-neutral-dark/50;
+    @apply focus:outline-none focus:ring-2 focus:ring-primary-purple/30 focus:border-primary-purple;
+    @apply transition-all duration-200;
+  }
+
+  /* Badge Styles */
+  .badge {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-medium;
+  }
+
+  .badge-blue {
+    @apply bg-primary-blue/10 text-primary-blue;
+  }
+
+  .badge-purple {
+    @apply bg-primary-purple/10 text-primary-purple;
+  }
+
+  .badge-pink {
+    @apply bg-primary-pink/10 text-primary-pink;
+  }
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+
+  /* Light & Airy Utilities */
+  .glass {
+    @apply bg-white/80 backdrop-blur-md border border-white/20;
+  }
+
+  .gradient-blue {
+    background: linear-gradient(135deg, var(--primary-blue), var(--primary-purple));
+  }
+
+  .gradient-soft {
+    background: linear-gradient(135deg, #F5F5F5, #FFFFFF);
   }
 }
