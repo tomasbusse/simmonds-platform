@@ -1,42 +1,35 @@
 "use client";
 
 import Link from "next/link";
-import { Activity, BarChart3, Home, Settings } from "lucide-react";
+import { GraduationCap, Users, BarChart3, Sparkles, BookOpen, Award } from "lucide-react";
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
+    <div className="min-h-screen bg-neutral-light">
       {/* Navigation */}
-      <nav className="bg-white dark:bg-slate-800 shadow-sm border-b border-slate-200 dark:border-slate-700">
+      <nav className="bg-white shadow-sm border-b border-neutral-dark/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16 items-center">
-            <div className="flex items-center gap-2">
-              <Activity className="w-8 h-8 text-blue-600" />
-              <h1 className="text-2xl font-bold text-slate-900 dark:text-white">
-                Simmonds Platform
-              </h1>
+          <div className="flex justify-between h-20 items-center">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 gradient-blue rounded-xl flex items-center justify-center">
+                <GraduationCap className="w-7 h-7 text-white" />
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold text-primary-blue">
+                  Simmonds
+                </h1>
+                <p className="text-xs text-neutral-dark">English Learning Platform</p>
+              </div>
             </div>
-            <div className="flex gap-6">
-              <Link
-                href="/"
-                className="flex items-center gap-2 text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-              >
-                <Home className="w-5 h-5" />
-                <span>Home</span>
+            <div className="flex gap-4">
+              <Link href="/admin" className="btn btn-secondary">
+                Admin
               </Link>
-              <Link
-                href="/dashboard"
-                className="flex items-center gap-2 text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-              >
-                <BarChart3 className="w-5 h-5" />
-                <span>Dashboard</span>
+              <Link href="/teacher" className="btn btn-primary">
+                Teacher
               </Link>
-              <Link
-                href="/analytics"
-                className="flex items-center gap-2 text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-              >
-                <Settings className="w-5 h-5" />
-                <span>Analytics</span>
+              <Link href="/student" className="btn btn-success">
+                Student
               </Link>
             </div>
           </div>
@@ -44,66 +37,148 @@ export default function HomePage() {
       </nav>
 
       {/* Hero Section */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="text-center mb-12">
-          <h2 className="text-5xl font-bold text-slate-900 dark:text-white mb-4">
-            Welcome to Simmonds Platform
-          </h2>
-          <p className="text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
-            A Next.js 14 + Convex-powered platform with real-time analytics and dashboard features
-          </p>
+      <main>
+        <div className="gradient-soft py-20">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center max-w-4xl mx-auto">
+              <h2 className="text-6xl font-bold mb-6 text-primary-blue">
+                Transform Corporate English Learning
+              </h2>
+              <p className="text-2xl text-neutral-dark mb-8 leading-relaxed">
+                AI-powered assessments, personalized learning paths, and comprehensive
+                management tools for modern companies.
+              </p>
+              <div className="flex gap-4 justify-center">
+                <Link href="/admin/demo" className="btn btn-primary text-lg px-8 py-4">
+                  Start Free Trial
+                </Link>
+                <Link href="#features" className="btn btn-secondary text-lg px-8 py-4">
+                  Learn More
+                </Link>
+              </div>
+            </div>
+          </div>
         </div>
 
-        {/* Feature Cards */}
-        <div className="grid md:grid-cols-3 gap-8 mt-12">
-          <div className="bg-white dark:bg-slate-800 p-8 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 hover:shadow-xl transition-shadow">
-            <div className="bg-blue-100 dark:bg-blue-900 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
-              <Home className="w-6 h-6 text-blue-600 dark:text-blue-400" />
-            </div>
-            <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">
-              Modern Stack
-            </h3>
-            <p className="text-slate-600 dark:text-slate-400">
-              Built with Next.js 14, React 18, and TypeScript for type-safe development
+        {/* Features Section */}
+        <div id="features" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+          <div className="text-center mb-16">
+            <h3 className="text-4xl font-bold mb-4">Everything You Need</h3>
+            <p className="text-xl text-neutral-dark">
+              Complete solution for corporate English training
             </p>
           </div>
 
-          <div className="bg-white dark:bg-slate-800 p-8 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 hover:shadow-xl transition-shadow">
-            <div className="bg-green-100 dark:bg-green-900 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
-              <Activity className="w-6 h-6 text-green-600 dark:text-green-400" />
+          <div className="grid md:grid-cols-3 gap-8">
+            {/* Feature 1 */}
+            <div className="card p-8">
+              <div className="w-16 h-16 bg-primary-blue/10 rounded-2xl flex items-center justify-center mb-6">
+                <Sparkles className="w-8 h-8 text-primary-blue" />
+              </div>
+              <h4 className="text-2xl font-semibold mb-3">AI-Generated Tests</h4>
+              <p className="text-neutral-dark leading-relaxed">
+                Automatically create Cambridge-aligned assessments with GPT-4 and Claude.
+                Save hours of content creation time.
+              </p>
             </div>
-            <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">
-              Real-time Updates
-            </h3>
-            <p className="text-slate-600 dark:text-slate-400">
-              Powered by Convex for seamless real-time data synchronization
-            </p>
-          </div>
 
-          <div className="bg-white dark:bg-slate-800 p-8 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 hover:shadow-xl transition-shadow">
-            <div className="bg-purple-100 dark:bg-purple-900 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
-              <BarChart3 className="w-6 h-6 text-purple-600 dark:text-purple-400" />
+            {/* Feature 2 */}
+            <div className="card p-8">
+              <div className="w-16 h-16 bg-primary-purple/10 rounded-2xl flex items-center justify-center mb-6">
+                <Users className="w-8 h-8 text-primary-purple" />
+              </div>
+              <h4 className="text-2xl font-semibold mb-3">Smart Group Allocation</h4>
+              <p className="text-neutral-dark leading-relaxed">
+                Automatically assign employees to beginner, intermediate, or advanced groups
+                based on assessment results.
+              </p>
             </div>
-            <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">
-              Analytics Dashboard
-            </h3>
-            <p className="text-slate-600 dark:text-slate-400">
-              Comprehensive analytics and insights at your fingertips
-            </p>
+
+            {/* Feature 3 */}
+            <div className="card p-8">
+              <div className="w-16 h-16 bg-primary-pink/10 rounded-2xl flex items-center justify-center mb-6">
+                <BarChart3 className="w-8 h-8 text-primary-pink" />
+              </div>
+              <h4 className="text-2xl font-semibold mb-3">Real-Time Progress</h4>
+              <p className="text-neutral-dark leading-relaxed">
+                Track attendance, test scores, and learning progress with live dashboards
+                for admins and teachers.
+              </p>
+            </div>
+
+            {/* Feature 4 */}
+            <div className="card p-8">
+              <div className="w-16 h-16 bg-primary-blue/10 rounded-2xl flex items-center justify-center mb-6">
+                <BookOpen className="w-8 h-8 text-primary-blue" />
+              </div>
+              <h4 className="text-2xl font-semibold mb-3">Interactive Lessons</h4>
+              <p className="text-neutral-dark leading-relaxed">
+                Create engaging lessons with audio content powered by ElevenLabs.
+                Schedule and manage everything from one place.
+              </p>
+            </div>
+
+            {/* Feature 5 */}
+            <div className="card p-8">
+              <div className="w-16 h-16 bg-primary-purple/10 rounded-2xl flex items-center justify-center mb-6">
+                <Award className="w-8 h-8 text-primary-purple" />
+              </div>
+              <h4 className="text-2xl font-semibold mb-3">Cambridge Aligned</h4>
+              <p className="text-neutral-dark leading-relaxed">
+                All assessments follow Cambridge English standards. Prepare employees
+                for official certifications.
+              </p>
+            </div>
+
+            {/* Feature 6 */}
+            <div className="card p-8">
+              <div className="w-16 h-16 bg-primary-pink/10 rounded-2xl flex items-center justify-center mb-6">
+                <GraduationCap className="w-8 h-8 text-primary-pink" />
+              </div>
+              <h4 className="text-2xl font-semibold mb-3">Positive Experience</h4>
+              <p className="text-neutral-dark leading-relaxed">
+                Students only see encouraging results. Beautiful, Apple-like interface
+                makes learning enjoyable.
+              </p>
+            </div>
           </div>
         </div>
 
         {/* CTA Section */}
-        <div className="mt-16 text-center">
-          <Link
-            href="/dashboard"
-            className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-4 rounded-lg shadow-lg transition-colors"
-          >
-            <BarChart3 className="w-5 h-5" />
-            <span>Go to Dashboard</span>
-          </Link>
+        <div className="gradient-blue py-20">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h3 className="text-4xl font-bold text-white mb-6">
+              Ready to Transform Your Team's English Skills?
+            </h3>
+            <p className="text-xl text-white/90 mb-8">
+              Join forward-thinking companies using Simmonds to upskill their workforce.
+            </p>
+            <Link href="/admin/demo" className="btn bg-white text-primary-blue hover:bg-white/90 text-lg px-10 py-5">
+              Get Started Today
+            </Link>
+          </div>
         </div>
       </main>
+
+      {/* Footer */}
+      <footer className="bg-white border-t border-neutral-dark/10 py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 gradient-blue rounded-xl flex items-center justify-center">
+                <GraduationCap className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <p className="font-semibold text-primary-blue">Simmonds</p>
+                <p className="text-xs text-neutral-dark">Powered by AI</p>
+              </div>
+            </div>
+            <p className="text-neutral-dark text-sm">
+              © 2024 Simmonds. Built with Next.js, Convex & AI.
+            </p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
