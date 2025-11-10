@@ -176,30 +176,42 @@ export default function StudentDashboard() {
           </div>
           <div className="grid md:grid-cols-3 gap-6">
             {[
-              { title: "Business Email Writing", progress: 75, icon: BookOpen, color: "blue" },
-              { title: "Pronunciation Practice", progress: 45, icon: Play, color: "purple" },
-              { title: "Grammar Exercises", progress: 90, icon: Star, color: "pink" },
-            ].map((material, idx) => (
-              <Link
-                key={idx}
-                href={`/student/materials/${idx + 1}`}
-                className="card p-6 group hover:shadow-xl transition-all"
-              >
-                <div className={`w-14 h-14 bg-primary-${material.color}/10 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
-                  <material.icon className={`w-7 h-7 text-primary-${material.color}`} />
-                </div>
-                <h4 className="font-semibold mb-2">{material.title}</h4>
-                <div className="flex items-center gap-3">
-                  <div className="flex-1 h-2 bg-neutral-light rounded-full overflow-hidden">
-                    <div
-                      className={`h-full bg-primary-${material.color}`}
-                      style={{ width: `${material.progress}%` }}
-                    />
+              { title: "Business Email Writing", progress: 75, icon: BookOpen, color: "blue" as const },
+              { title: "Pronunciation Practice", progress: 45, icon: Play, color: "purple" as const },
+              { title: "Grammar Exercises", progress: 90, icon: Star, color: "pink" as const },
+            ].map((material, idx) => {
+              const bgColorClass = material.color === "blue" ? "bg-primary-blue/10" :
+                                   material.color === "purple" ? "bg-primary-purple/10" :
+                                   "bg-primary-pink/10";
+              const textColorClass = material.color === "blue" ? "text-primary-blue" :
+                                     material.color === "purple" ? "text-primary-purple" :
+                                     "text-primary-pink";
+              const progressColorClass = material.color === "blue" ? "bg-primary-blue" :
+                                         material.color === "purple" ? "bg-primary-purple" :
+                                         "bg-primary-pink";
+
+              return (
+                <Link
+                  key={idx}
+                  href={`/student/materials/${idx + 1}`}
+                  className="card p-6 group hover:shadow-xl transition-all"
+                >
+                  <div className={`w-14 h-14 ${bgColorClass} rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
+                    <material.icon className={`w-7 h-7 ${textColorClass}`} />
                   </div>
-                  <span className="text-sm font-medium text-neutral-dark">{material.progress}%</span>
-                </div>
-              </Link>
-            ))}
+                  <h4 className="font-semibold mb-2">{material.title}</h4>
+                  <div className="flex items-center gap-3">
+                    <div className="flex-1 h-2 bg-neutral-light rounded-full overflow-hidden">
+                      <div
+                        className={`h-full ${progressColorClass}`}
+                        style={{ width: `${material.progress}%` }}
+                      />
+                    </div>
+                    <span className="text-sm font-medium text-neutral-dark">{material.progress}%</span>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         </div>
 

@@ -115,24 +115,37 @@ export default function TeacherDashboard() {
             </div>
             <div className="space-y-4">
               {groupsWithCounts.length > 0 ? (
-                groupsWithCounts.map((group) => (
-                  <Link
-                    key={group._id}
-                    href={`/teacher/groups/${group._id}`}
-                    className="flex items-center justify-between p-4 bg-neutral-light rounded-xl hover:shadow-md transition-all"
-                  >
-                    <div className="flex items-center gap-4">
-                      <div className={`w-12 h-12 bg-primary-${getLevelColor(group.level)}/10 rounded-xl flex items-center justify-center`}>
-                        <Users className={`w-6 h-6 text-primary-${getLevelColor(group.level)}`} />
+                groupsWithCounts.map((group) => {
+                  const levelColor = getLevelColor(group.level);
+                  const bgColorClass = levelColor === "blue" ? "bg-primary-blue/10" :
+                                       levelColor === "purple" ? "bg-primary-purple/10" :
+                                       "bg-primary-pink/10";
+                  const textColorClass = levelColor === "blue" ? "text-primary-blue" :
+                                         levelColor === "purple" ? "text-primary-purple" :
+                                         "text-primary-pink";
+                  const badgeClass = levelColor === "blue" ? "badge-blue" :
+                                     levelColor === "purple" ? "badge-purple" :
+                                     "badge-pink";
+
+                  return (
+                    <Link
+                      key={group._id}
+                      href={`/teacher/groups/${group._id}`}
+                      className="flex items-center justify-between p-4 bg-neutral-light rounded-xl hover:shadow-md transition-all"
+                    >
+                      <div className="flex items-center gap-4">
+                        <div className={`w-12 h-12 ${bgColorClass} rounded-xl flex items-center justify-center`}>
+                          <Users className={`w-6 h-6 ${textColorClass}`} />
+                        </div>
+                        <div>
+                          <p className="font-semibold">{group.name}</p>
+                          <p className="text-sm text-neutral-dark">{group.level}</p>
+                        </div>
                       </div>
-                      <div>
-                        <p className="font-semibold">{group.name}</p>
-                        <p className="text-sm text-neutral-dark">{group.level}</p>
-                      </div>
-                    </div>
-                    <span className={`badge badge-${getLevelColor(group.level)}`}>{group.level}</span>
-                  </Link>
-                ))
+                      <span className={`badge ${badgeClass}`}>{group.level}</span>
+                    </Link>
+                  );
+                })
               ) : (
                 <p className="text-neutral-dark text-center py-8">No groups assigned yet</p>
               )}
