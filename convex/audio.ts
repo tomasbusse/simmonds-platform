@@ -101,13 +101,8 @@ export const generateQuestionAudio = action({
       const base64Audio = Buffer.from(audioBuffer).toString('base64');
       const audioUrl = `data:audio/mpeg;base64,${base64Audio}`;
 
-      // Store audio content in database
-      await ctx.runMutation(api.internal.storeAudioContent, {
-        text: args.text,
-        audioUrl,
-        voiceId,
-        questionId: args.questionId,
-      });
+      // TODO: Store audio content in database when needed
+      // For now, just return the audio URL
 
       return audioUrl;
     } catch (error) {

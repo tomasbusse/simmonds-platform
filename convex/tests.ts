@@ -38,9 +38,9 @@ export const getAllTests = query({
       return tests.filter(t => t.companyId === args.companyId);
     }
 
-    if (args.type) {
+    if (args.type !== undefined) {
       return await query
-        .withIndex("by_type", (q) => q.eq("type", args.type))
+        .withIndex("by_type", (q) => q.eq("type", args.type!))
         .collect();
     }
 

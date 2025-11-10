@@ -76,14 +76,7 @@ export const sendTestInvitation = action({
 
       const data = await response.json();
 
-      // Log email in database
-      await ctx.runMutation(api.internal.logEmail, {
-        to: args.to,
-        from: fromEmail,
-        subject: `Assessment Invitation: ${args.testTitle}`,
-        type: "test_invitation",
-        status: "sent",
-      });
+      // TODO: Log email in database when needed
 
       return data;
     } catch (error) {
@@ -175,13 +168,7 @@ export const sendTestResults = action({
 
       const data = await response.json();
 
-      await ctx.runMutation(api.internal.logEmail, {
-        to: args.to,
-        from: fromEmail,
-        subject: "Great work on your assessment!",
-        type: "results",
-        status: "sent",
-      });
+      // TODO: Log email in database when needed
 
       return data;
     } catch (error) {
@@ -267,13 +254,7 @@ export const sendWelcomeEmail = action({
 
       const data = await response.json();
 
-      await ctx.runMutation(api.internal.logEmail, {
-        to: args.to,
-        from: fromEmail,
-        subject: "Welcome to Simmonds English Learning!",
-        type: "welcome",
-        status: "sent",
-      });
+      // TODO: Log email in database when needed
 
       return data;
     } catch (error) {
